@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "Beer Sample Database";
+}
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title.</h1>
+                <h2>@ViewBag.Message</h2>
+            </hgroup>
+            <p>
+                To learn more about the Couchbase .NET Client visit
+                <a href="http://www.couchbase.com/develop/net/current" title="Couchbase Developer Portal">http://couchbase.com/develop/net/current</a>.
+                The page features <mark>tutorials and samples</mark> to help you get the most from Couchbase.
+                If you have any questions about Couchbase development visit
+                <a href="http://www.couchbase.com/forums/sdks/sdks" title="Couchbase Forums">our SDK forums</a>.
+            </p>
+        </div>
+    </section>
+}
+<h3>Browse the Beer Sample Database</h3>
+<ol class="round">
+    <li class="one">
+        @Html.ActionLink("Lookup beers", "Index", "Beers", new { pagesize = 10 }, new { })
+    </li>
+
+    <li class="two">
+        @Html.ActionLink("Lookup breweries", "Index", "Breweries", new { pagesize = 10 }, new { })
+    </li>
+
+    <li class="three">
+        @Html.ActionLink("Lookup breweries by country", "Index", "Countries")
+    </li>
+
+    <li class="four">
+        @Html.ActionLink("Lookup breweries on a map", "Details", "Locations")
+    </li>
+</ol>

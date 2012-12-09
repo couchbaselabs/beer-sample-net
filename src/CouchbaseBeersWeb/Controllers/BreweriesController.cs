@@ -21,9 +21,9 @@ namespace CouchbaseBeersWeb.Controllers
 
 		public ActionResult Index(string startKey, int pageSize = 25)
 		{
-			var breweries = BreweryRepository.GetAllByName(startKey: startKey, limit: pageSize+1);
+			var breweries = BreweryRepository.GetAllByName(startKey: startKey, limit: pageSize + 1);
 			ViewBag.StartKey = breweries.ElementAt(0).Name;
-			ViewBag.NextStartKey = breweries.ElementAt(breweries.Count()-1).Name;
+			ViewBag.NextStartKey = breweries.ElementAt(breweries.Count() - 1).Name;
 			return View(breweries.Take(pageSize));
 		}
 

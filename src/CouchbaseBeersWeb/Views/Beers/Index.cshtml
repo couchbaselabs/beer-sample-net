@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CouchbaseBeersWeb.Models.Brewery>
+﻿@model IEnumerable<CouchbaseBeersWeb.Models.Beer>
 
 @{
     ViewBag.Title = "Index";
@@ -15,28 +15,31 @@
             @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.City)
+            @Html.DisplayNameFor(model => model.ABV)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.State)
+            @Html.DisplayNameFor(model => model.IBU)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Code)
+            @Html.DisplayNameFor(model => model.SRM)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Country)
+            @Html.DisplayNameFor(model => model.UPC)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Phone)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Website)
+            @Html.DisplayNameFor(model => model.BreweryId)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Updated)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Style)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Category)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Type)
@@ -50,28 +53,31 @@
             @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.City)
+            @Html.DisplayFor(modelItem => item.ABV)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.State)
+            @Html.DisplayFor(modelItem => item.IBU)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Code)
+            @Html.DisplayFor(modelItem => item.SRM)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Country)
+            @Html.DisplayFor(modelItem => item.UPC)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Phone)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Website)
+            @Html.DisplayFor(modelItem => item.BreweryId)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Updated)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Style)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Category)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Type)
@@ -91,5 +97,4 @@
                 new { startKey = ViewBag.NextStartKey, previousKey = ViewBag.StartKey, pagesize = Request["pagesize"] ?? "10"})
         </td>
     </tr>
-
 </table>

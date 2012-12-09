@@ -1,0 +1,18 @@
+﻿@model IEnumerable<CouchbaseBeersWeb.Models.Brewery>
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Breweries in @Request["code"], @Request["city"], @Request["province"], @Request["country"]</h2>
+
+<ul>
+@foreach (var item in Model)
+{
+    <li>
+        @Html.ActionLink(item.Name, "Details", "Breweries", new { id = item.Id }, new { })
+    </li>
+}
+</ul>
+
+@Html.ActionLink("Back to Country List", "Index")

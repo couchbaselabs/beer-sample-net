@@ -74,14 +74,24 @@ namespace CouchbaseBeersWeb.Models
 			return Tuple.Create(result.Success, result.Message);
 		}
 
-		protected IView<T> GetView(string name)
+		protected IView<T> GetView(string name, bool isProjection = false)
 		{
-			return _Client.GetView<T>(_designDoc, name, true);
+			return _Client.GetView<T>(_designDoc, name, ! isProjection);
 		}
 
 		protected IView<IViewRow> GetViewRaw(string name)
 		{
 			return _Client.GetView(_designDoc, name);
+		}
+
+		protected virtual ISpatialView<T> GetSpatialView(string name, bool isProjection = false)
+		{
+			return _Client.GetSpatialView<T>(_designDoc, name, !isProjection);
+		}
+
+		protected virtual ISpatialView<ISpatialViewRow> GetSpatialViewRaw(string name)
+		{
+			return _Client.GetSpatialView(_designDoc, name);
 		}
 
 		protected virtual string BuildKey(T model)
@@ -90,7 +100,7 @@ namespace CouchbaseBeersWeb.Models
 			{
 				return Guid.NewGuid().ToString();
 			}
-			return model.Id.InflectTo().Underscored;
+			return model.Id.ToLower().InflectTo().Underscored;
 		}
 
 		private string serializeAndIgnoreId(T obj)

@@ -17,12 +17,16 @@ namespace CouchbaseBeersWeb.Models
 		[CouchbaseViewKey("by_name", "name")]
 		public string Name { get; set; }
 
+		[CouchbaseViewKeyCount("by_country", "city", 2)]
 		public string City { get; set; }
 
+		[CouchbaseViewKeyCount("by_country", "state", 1)]
 		public string State { get; set; }
 
+		[CouchbaseViewKeyCount("by_country", "code", 3, "null")]
 		public string Code { get; set; }
 
+		[CouchbaseViewKeyCount("by_country", "country", 0)]
 		public string Country { get; set; }
 
 		public string Phone { get; set; }
@@ -44,6 +48,35 @@ namespace CouchbaseBeersWeb.Models
 		{
 			get { return _beers; }
 			set { _beers = value; }
+		}
+
+		[JsonIgnore]
+		public string GeoAccuracy
+		{
+			get
+			{
+				return Geo != null && Geo.ContainsKey("accuracy") ? Geo["accuracy"] as string : "";
+			}
+		}
+
+		[CouchbaseSpatialViewKey("points", "geo.lng", 0)]
+		[JsonIgnore]
+		public float Longitude
+		{
+			get
+			{
+				return Geo != null && Geo.ContainsKey("lng") ? Convert.ToSingle(Geo["lng"]) : 0f;
+			}
+		}
+
+		[CouchbaseSpatialViewKey("points", "geo.lat", 1)]
+		[JsonIgnore]
+		public float Latitude
+		{
+			get
+			{
+				return Geo != null && Geo.ContainsKey("lat") ? Convert.ToSingle(Geo["lat"]) : 0f;
+			}
 		}
 
 		public override string Type

@@ -1,0 +1,123 @@
+﻿@model CouchbaseBeersWeb.Models.Brewery
+
+@{
+    ViewBag.Title = "View breweries";
+}
+
+<style type="text/css">
+    #mapContainer {
+        width: 1024px;
+        height: 768px;
+    }
+
+    .brewery-link {
+        text-decoration: none;
+    }
+
+        .brewery-link:hover {
+            background-color: black;
+            text-decoration: underline;
+        }
+</style>
+
+<script type="text/javascript" charset="UTF-8" src="http://api.maps.nokia.com/2.2.3/jsl.js?with=all"></script>
+
+<h2>View Breweries</h2>
+
+<div id="mapContainer"></div>
+
+
+@section scripts
+{
+    <script type="text/ecmascript">
+
+        nokia.Settings.set("appId", "cGlMOJkPDBNk9Sp7lLNf");
+        nokia.Settings.set("authenticationToken", "SFzSoMbHq_LsiOP0W43k1Q ");
+
+        var mapContainer = document.getElementById("mapContainer");
+        var infoBubbles = new nokia.maps.map.component.InfoBubbles();
+        var TOUCH = nokia.maps.dom.Page.browser.touch,
+                        CLICK = TOUCH ? "tap" : "click";
+
+        var map = new nokia.maps.map.Display(mapContainer, {
+            // initial center and zoom level of the map
+            center: [41.763309, -72.67408],
+            zoomLevel: 8,
+            components: [
+                new nokia.maps.map.component.ZoomBar(),
+                new nokia.maps.map.component.Behavior(),
+                infoBubbles
+            ]
+        });
+
+        var lastZoomSize = map.zoomLevel;
+        var maxZoomSizeForClustering = 7;
+
+
+        $().ready(function () {
+
+            var loadBreweries = function () {
+
+                var mapBoundingBox = map.getViewBounds();
+                var queryBoundingBox = mapBoundingBox.topLeft.longitude + "," + mapBoundingBox.bottomRight.latitude + "," +
+                                       mapBoundingBox.bottomRight.longitude + "," + mapBoundingBox.topLeft.latitude;
+
+                var ClusterProvider = nokia.maps.clustering.ClusterProvider,
+                                        clusterProvider = new ClusterProvider(map, {
+                                            eps: 16,
+                                            minPts: 1,
+                                            dataPoints: []
+                                        });
+                $.post("@Url.Action("Details")", { bbox: queryBoundingBox }, function (data) {
+
+                var coordinates = new Array();
+                console.log(data);
+                $.each(data, function (idx, item) {
+
+                    var coordinate = new nokia.maps.geo.Coordinate(item.geo[1], item.geo[0]);
+                    coordinates.push(coordinate);
+
+                    if (map.zoomLevel > maxZoomSizeForClustering) {
+
+                        var standardMarker = new nokia.maps.map.StandardMarker(coordinate);
+                        standardMarker.addListener(CLICK,
+                            function (evt) {
+                                var href = '@Url.Action("details", "breweries")/' + item.id;
+                                infoBubbles.openBubble(
+                                    "<a href='" + href + "' class='brewery-link'>" + item.name + "</a>",
+                                    standardMarker.coordinate);
+                            });
+                        map.objects.add(standardMarker);
+                    } 
+                });
+
+                if (map.zoomLevel <= maxZoomSizeForClustering) {
+                    clusterProvider.addAll(coordinates);
+                    clusterProvider.cluster();
+                }
+
+
+            });
+        };
+
+        map.addListener("dragend", function (evt) {
+            loadBreweries();
+        });
+
+        map.addListener("mapviewchangeend", function (evt) {
+            
+            if ((lastZoomSize > maxZoomSizeForClustering && map.zoomLevel <= maxZoomSizeForClustering) ||
+                (lastZoomSize <= maxZoomSizeForClustering && map.zoomLevel > maxZoomSizeForClustering)) {
+                console.log("clear");
+                map.objects.clear();
+            }
+
+            lastZoomSize = map.zoomLevel;
+            loadBreweries();
+        });
+
+        loadBreweries();
+    });
+
+    </script>
+}

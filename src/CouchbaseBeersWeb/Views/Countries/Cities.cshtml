@@ -1,0 +1,16 @@
+﻿@model dynamic
+
+<h2>Breweries counts by city in @Request["province"], @Request["country"]</h2>
+
+<ul>
+@foreach (KeyValuePair<string, int> item in Model)
+{
+    <li>
+        @Html.ActionLink(item.Key, "Codes",
+            new { country = Request["country"], 
+                  province = Request["province"], 
+                  city = item.Key})
+        (@item.Value)
+    </li>
+}
+</ul>
