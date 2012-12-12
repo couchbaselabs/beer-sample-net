@@ -32,7 +32,7 @@ namespace CouchbaseBeersWeb.Controllers
 
 		public ActionResult Details(string id)
 		{
-			var brewery = BreweryRepository.GetWithBeers(id).Item1;
+			var brewery = BreweryRepository.GetWithBeers(id);
 			return View(brewery);
 		}
 
@@ -59,7 +59,7 @@ namespace CouchbaseBeersWeb.Controllers
 
 		public ActionResult Edit(string id)
 		{
-			var brewery = BreweryRepository.Get(id).Item1;
+			var brewery = BreweryRepository.Get(id);
 			return View(brewery);
 		}
 
@@ -78,7 +78,7 @@ namespace CouchbaseBeersWeb.Controllers
 
 		public ActionResult Delete(string id)
 		{
-			var brewery = BreweryRepository.Get(id).Item1;
+			var brewery = BreweryRepository.Get(id);
 			return View(brewery);
 		}
 

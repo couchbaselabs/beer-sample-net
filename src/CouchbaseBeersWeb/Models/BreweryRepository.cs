@@ -5,6 +5,7 @@ using System.Web;
 using inflector_extension;
 using Couchbase;
 using Enyim.Caching.Memcached.Results;
+using Couchbase.Operations;
 
 namespace CouchbaseBeersWeb.Models
 {
@@ -12,6 +13,30 @@ namespace CouchbaseBeersWeb.Models
 
 	public class BreweryRepository : RepositoryBase<Brewery>
 	{
+		/// <summary>
+		/// Create a Brewery, blocking until persisted to master node
+		/// Views will not consider a new record for an index
+		/// until persisted to disk.
+		/// </summary>
+		/// <param name="value">Brewery to create</param>
+		/// <returns>Status code (0 on success)</returns>
+		public int Create(Brewery brewery)
+		{
+			return base.Create(brewery, PersistTo.One);
+		}
+
+		/// <summary>
+		/// Remove a Brewery, blocking until removed from disk
+		/// Views will not remove a deleted record from an index
+		/// until removed from disk.
+		/// </summary>
+		/// <param name="key">Key of brewery to delete</param>
+		/// <returns>Status code (0 on success)</returns>
+		public int Delete(string key)
+		{
+			return base.Delete(key, PersistTo.One);
+		}
+
 		public IEnumerable<Brewery> GetAllByName(string startKey = null, string endKey = null, int limit = 0, bool allowStale = false)
 		{
 			var view = GetView("by_name");
@@ -22,19 +47,19 @@ namespace CouchbaseBeersWeb.Models
 			return view;
 		}
 
-		public Tuple<Brewery, bool, string> GetWithBeers(string id)
+		public Brewery GetWithBeers(string id)
 		{
 			var rows = GetViewRaw("all_with_beers")
 				.StartKey(new object[] { id, 0 })
 				.EndKey(new object[] { id, "\uefff", 1 })
 				.ToArray();
 
-			var result = Get(rows[0].ItemId);
-			result.Item1.Beers = rows.Skip(1)
+			var brewery = Get(rows[0].ItemId);
+			brewery.Beers = rows.Skip(1)
 				.Select(r => new Beer { Id = r.ItemId, Name = r.ViewKey[1].ToString() })
 				.ToList();
 
-			return result;
+			return brewery;
 		}
 
 		public IEnumerable<KeyValuePair<string, int>> GetGroupedByLocation(BreweryGroupLevels groupLevel, string[] keys = null)

@@ -53,7 +53,7 @@ namespace CouchbaseBeersWeb.Controllers
 
 		public ActionResult Details(string id)
 		{
-			var Beer = BeerRepository.Get(id).Item1;
+			var Beer = BeerRepository.Get(id);
 			return View(Beer);
 		}
 
@@ -80,7 +80,7 @@ namespace CouchbaseBeersWeb.Controllers
 
 		public ActionResult Edit(string id)
 		{
-			var Beer = BeerRepository.Get(id).Item1;
+			var Beer = BeerRepository.Get(id);
 			return View(Beer);
 		}
 
@@ -99,7 +99,7 @@ namespace CouchbaseBeersWeb.Controllers
 
 		public ActionResult Delete(string id)
 		{
-			var Beer = BeerRepository.Get(id).Item1;
+			var Beer = BeerRepository.Get(id);
 			return View(Beer);
 		}
 
